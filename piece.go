@@ -183,10 +183,40 @@ var (
 )
 
 func (p Piece) getFENChar() string {
+	switch p {
+	case WhiteKing:
+		return "K"
+	case WhiteQueen:
+		return "Q"
+	case WhiteRook:
+		return "R"
+	case WhiteBishop:
+		return "B"
+	case WhiteKnight:
+		return "N"
+	case WhitePawn:
+		return "P"
+	case BlackKing:
+		return "k"
+	case BlackQueen:
+		return "q"
+	case BlackRook:
+		return "r"
+	case BlackBishop:
+		return "b"
+	case BlackKnight:
+		return "n"
+	case BlackPawn:
+		return "p"
+	default:
+		return ""
+	}
+	/*
 	for key, piece := range fenPieceMap {
 		if piece == p {
 			return key
 		}
 	}
 	return ""
+	*/
 }

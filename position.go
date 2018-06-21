@@ -43,6 +43,8 @@ func (cr CastleRights) String() string {
 // to its outcome.  Position is translatable to FEN notation.
 type Position struct {
 	board           *Board
+	cached_board_string string
+	cached_castle_string string
 	turn            Color
 	castleRights    CastleRights
 	enPassantSquare Square
@@ -74,6 +76,8 @@ func (pos *Position) Update(m *Move) *Position {
 	b.update(m)
 	return &Position{
 		board:           b,
+		cached_board_string: "",
+		cached_castle_string: "",
 		turn:            pos.turn.Other(),
 		castleRights:    ncr,
 		enPassantSquare: pos.updateEnPassantSquare(m),
@@ -213,9 +217,23 @@ func (pos *Position) updateEnPassantSquare(m *Move) Square {
 	return NoSquare
 }
 
+func (pos *Position)boardString() string {
+	if (pos.cached_board_string == "") {
+		pos.cached_board_string = pos.board.String()
+	}
+	return pos.cached_board_string
+}
+
+func (pos *Position)castleString() string {
+	if (pos.cached_castle_string == "") {
+		pos.cached_castle_string = pos.castleRights.String()
+	}
+	return pos.cached_castle_string
+}
+
 func (pos *Position) samePosition(pos2 *Position) bool {
-	return pos.board.String() == pos2.board.String() &&
+	return pos.boardString() == pos2.boardString() &&
 		pos.turn == pos2.turn &&
-		pos.castleRights.String() == pos2.castleRights.String() &&
+		pos.castleString() == pos2.castleString() &&
 		pos.enPassantSquare == pos2.enPassantSquare
 }
