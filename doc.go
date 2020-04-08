@@ -50,5 +50,5 @@ Random Game
 package chess
 
 func GetLibraryVersion() int {
-  return 2
+  return 3
 }
