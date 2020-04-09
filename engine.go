@@ -306,7 +306,10 @@ func castleMoves(pos *Position) []*Move {
 			m := &Move{s1: getSquare(kingFile, kingRank), s2: getSquare(rookFile, kingRank)}
 			m.addTag(QueenSideCastle)
 			addTags(m, pos)
-			moves = append(moves, m)
+			// filter out moves that put king into check
+			if !m.HasTag(inCheck) {
+				moves = append(moves, m)
+			}
 		} else {
 			// Validate King side legal.
 			ocupied := ^pos.board.emptySqs
@@ -337,7 +340,10 @@ func castleMoves(pos *Position) []*Move {
 			m := &Move{s1: getSquare(kingFile, kingRank), s2: getSquare(rookFile, kingRank)}
 			m.addTag(KingSideCastle)
 			addTags(m, pos)
-			moves = append(moves, m)		
+			// filter out moves that put king into check
+			if !m.HasTag(inCheck) {
+				moves = append(moves, m)
+			}
 		}
 	}
 	return moves
