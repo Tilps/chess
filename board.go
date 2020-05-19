@@ -6,6 +6,7 @@ import (
 	"errors"
 	"strconv"
 	"strings"
+	"bytes"
 )
 
 // A Board represents a chess board and its relationship between squares and pieces.
@@ -79,28 +80,30 @@ func (b *Board) Draw() string {
 
 // String implements the fmt.Stringer interface and returns
 // a string in the FEN board format: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
+// TODO use zobrist instead
 func (b *Board) String() string {
-	fen := ""
+	var fen bytes.Buffer
+	var retval string
 	for r := 7; r >= 0; r-- {
 		for f := 0; f < numOfSquaresInRow; f++ {
 			sq := getSquare(File(f), Rank(r))
 			p := b.Piece(sq)
 			if p != NoPiece {
-				fen += p.getFENChar()
+				fen.WriteString(p.getFENChar())
 			} else {
-				fen += "1"
+				fen.WriteString("1")
 			}
 		}
 		if r != 0 {
-			fen += "/"
+			fen.WriteString("/")
 		}
 	}
 	for i := 8; i > 1; i-- {
 		repeatStr := strings.Repeat("1", i)
 		countStr := strconv.Itoa(i)
-		fen = strings.Replace(fen, repeatStr, countStr, -1)
+		retval = strings.Replace(fen.String(), repeatStr, countStr, -1)
 	}
-	return fen
+	return retval
 }
 
 // Piece returns the piece for the given square.

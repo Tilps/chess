@@ -171,6 +171,26 @@ func (g *Game) Move(m *Move) error {
 	return nil
 }
 
+// Unmove unmakes the last move
+// and sets the game state to the
+// one of the previous move
+func (g *Game) Unmove() error {
+	if (len(g.moves) < 1) {
+		return fmt.Errorf("chess: no previous moves to unmake")
+	}
+	// delete the last move
+	g.moves = g.moves[:len(g.moves)-1]
+	// delete the last position
+	g.positions = g.positions[:len(g.positions)-1]
+	// update the current position to the last one
+	g.pos = g.positions[len(g.positions)-1]
+	// reset outcome, etc.
+	g.method = NoMethod
+	g.outcome = NoOutcome
+	//g.updatePosition()
+	return nil
+}
+
 // MoveStr decodes the given string in game's notation
 // and calls the Move function.  An error is returned if
 // the move can't be decoded or the move is invalid.
@@ -336,6 +356,7 @@ func (g *Game) RemoveTagPair(k string) bool {
 
 func (g *Game) updatePosition() {
 	method := g.pos.Status()
+
 	if method == Stalemate {
 		g.method = Stalemate
 		g.outcome = Draw
